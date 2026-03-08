@@ -1,0 +1,48 @@
+- PWA can be split between:
+    
+    - main app: HTML, CSS, and the part of the Javascript that implements the app's UI
+    - service worker: handles offline and background tasks
+
+- service worker
+    
+    - controls some or all of the app's pages
+    - can fetch resources from the server and add them to the local cache
+        - pages, styles, scripts, images, etc
+    - the 'Cache' interface is used to add resources to the cache
+        - 'WorkerGlobalScope.caches' property
+    - intercepts global 'fetch' events fired by the browser
+        - handling these events, a service worker could, for example, implement a 'cache-first' policy
+        - can therefore be thought of as a proxy between the web app and the server
+
+    - service workers can run while the main app is not running
+
+- background fetch
+
+    - enables network requests to be performed while both the main app UI and the service worker are closed
+    - ...
+
+- periodic background sync
+
+    - enables a PWA to periodically update its data in the background, while the main app is closed
+    - takes advantage of the fact that on mobile devices especially, connectivity is not poor so much as intermittent
+        - connectivity gaps can then be smoothed over
+    - e.g.
+        // main.js
+        async function registerPeriodicSync() {
+          const swRegistration = await navigator.serviceWorker.ready;
+          swRegistration.periodicSync.register("update-news", {
+            // try to update every 24 hours
+            minInterval: 24 * 60 * 60 * 1000,
+          });
+        }
+    - ultimately, this periodic sync period is still up to the browser
+        - apps that users open and interact with more often will likely recieve more period sync events
+
+- push
+
+    - the 'Push API' enables a PWA to recieve messages pushed from the server, whether the app is running or not
+    - push messages are not sent directly from the app server to the devices
+        - instead, the app server sends messages to a push service, from which the device can retrieve and deliver them to the app
+        - messages therefore need to be encrypted as well as signed by the app server
+    - the push service is operated by the browser vendor or by a third party
+    
