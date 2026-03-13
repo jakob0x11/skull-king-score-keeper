@@ -30,13 +30,25 @@ function Start() {
     setPlayerName('');
   }
 
+  const handleDismissName = (index: number) => {
+    setPlayerNames(prev => {
+      const updated = [...prev]
+      updated.splice(index, 1);
+      return updated;
+    })
+  }
+
   return (
     <div className="flex flex-col gap-8">
-      <div className='flex flex-row flex-wrap gap-2 justify-center'>
+      <div className='flex flex-row flex-wrap gap-4 justify-center'>
         {
           playerNames.map((name, index) => {
             return (
-              <Tag key={`${name}-${index}`} text={name} />
+              <Tag 
+                key={`${name}-${index}`}
+                text={name} 
+                onClickDismiss={() => handleDismissName(index)} 
+              />
             )
           })
         }
@@ -54,6 +66,14 @@ function Start() {
           disabled={!canSubmitName} 
         />
       </div>
+      {playerNames.length > 1 && (
+        <div className="flex flex-col items-center">
+          <Button
+            text="Yar!"
+            onClick={() => {/*startGame*/}}
+          />
+        </div>
+      )}
     </div>
   )
 }
